@@ -52,7 +52,7 @@ def calculate_seven_day_avg_volume(data: TimeSeriesJson) -> float:
 # Find the average volume of MSFT in the past 7 days
 ms_data = get_time_series_data_for(MICROSOFT)
 ms_seven_day_avg_volume = calculate_seven_day_avg_volume(ms_data)
-print(ms_seven_day_avg_volume)
+print("Microsoft 7 Day Avg Volume:", ms_seven_day_avg_volume)
 
 
 def get_highest_closing_six_months(data: TimeSeriesJson) -> float:
@@ -74,7 +74,7 @@ def get_highest_closing_six_months(data: TimeSeriesJson) -> float:
 # Find the highest closing price of AAPL in the past 6 months
 apple_data = get_time_series_data_for(APPLE)
 apple_six_month_high = get_highest_closing_six_months(apple_data)
-print(apple_six_month_high)
+print("Apple six month high:", apple_six_month_high)
 
 
 def get_thirty_day_diffs(data: TimeSeriesJson) -> List[float]:
@@ -94,7 +94,7 @@ def get_thirty_day_diffs(data: TimeSeriesJson) -> List[float]:
 # Find the difference between open and close price for BA for every day in the last month
 boeing_data = get_time_series_data_for(BOEING)
 boeing_30_days_diffs: List = get_thirty_day_diffs(boeing_data)
-print(boeing_30_days_diffs)
+print("Boeing Closing Price Diffs:", boeing_30_days_diffs)
 
 
 def highest_return_past_x_days(symbol: StockSymbol,
@@ -133,7 +133,7 @@ def find_stock_with_highest_return(symbols: List[StockSymbol]) -> StockSymbol:
 # Given a list of stock symbols, find the symbol with the largest return over the past month
 stock_symbols = [BOEING, APPLE, MICROSOFT]
 stock_highest_return = find_stock_with_highest_return(stock_symbols)
-print(stock_highest_return)
+print(f"Largest Return out of {'/'.join(stock_symbols)}:", stock_highest_return)
 
 
 
