@@ -14,7 +14,11 @@ BOEING = "BA"
 
 
 TimeSeriesJson = dict
-def get_time_series_data_for(symbol: str) -> TimeSeriesJson:
+StockSymbol = str
+ReturnPercAsDecimal = float
+
+
+def get_time_series_data_for(symbol: StockSymbol) -> TimeSeriesJson:
     url_params = {
         "function": "TIME_SERIES_DAILY",
         "symbol": symbol,
@@ -64,8 +68,8 @@ def get_highest_closing_six_months(data: TimeSeriesJson) -> float:
 
 
 # Find the highest closing price of AAPL in the past 6 months
-apple_data = get_time_series_data_for(APPLE)
-apple_six_month_high = get_highest_closing_six_months(apple_data)
+# apple_data = get_time_series_data_for(APPLE)
+# apple_six_month_high = get_highest_closing_six_months(apple_data)
 
 def get_thirty_day_diffs(data: TimeSeriesJson) -> List[float]:
     by_day = data['Time Series (Daily)']
@@ -82,9 +86,47 @@ def get_thirty_day_diffs(data: TimeSeriesJson) -> List[float]:
 
 
 # Find the difference between open and close price for BA for every day in the last month
-boeing_data = get_time_series_data_for(BOEING)
-boeing_30_days_diffs: List = get_thirty_day_diffs(boeing_data)
+# boeing_data = get_time_series_data_for(BOEING)
+# boeing_30_days_diffs: List = get_thirty_day_diffs(boeing_data)
+
+
+def highest_return_past_x_days(symbol: StockSymbol,
+                               num_days: int) -> ReturnPercAsDecimal:
+
+    by_day = get_time_series_data_for(symbol)['Time Series (Daily)']
+
+    today = date.today()
+    price_today = float(by_day[str(today)]['4. close'])
+
+    one_month_ago = today - timedelta(days=30)
+
+    # If day falls on day market is closed, find previous close:
+    market_closed = True
+    while market_closed:
+        try:
+            price_thirty_days_ago = float(by_day[str(one_month_ago)]['4. close'])
+            market_closed = False
+        except KeyError:
+            one_month_ago -= timedelta(days=1)
+
+
+    diff = price_thirty_days_ago - price_today
+
+    return diff / price_thirty_days_ago
+
+def find_stock_with_highest_return(symbols: List[StockSymbol]) -> StockSymbol:
+    stock_returns = {
+        highest_return_past_x_days(symbol, 30): symbol
+        for symbol in symbols
+    }
+    return stock_returns[max(stock_returns.keys())]
 
 
 # Given a list of stock symbols, find the symbol with the largest return over the past month
-SYMBOLS = [BOEING, APPLE, MICROSOFT]
+stock_symbols = [BOEING, APPLE, MICROSOFT]
+stock_highest_return = find_stock_with_highest_return(stock_symbols)
+
+print()
+
+
+
