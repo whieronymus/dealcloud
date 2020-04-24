@@ -4,8 +4,9 @@ import requests
 import statistics
 
 
-
-
+# I would normally put this in a secrets file, but in the interest of
+# making this solution usable for the grader without having to get a new
+# API KEY, I'm making it public for now.
 API_KEY = "FCJFW9PVWJ6HDU3K"
 BASE_URL = "https://www.alphavantage.co/query"
 MICROSOFT = "MSFT"
@@ -28,6 +29,7 @@ def get_time_series_data_for(symbol: StockSymbol) -> TimeSeriesJson:
     resp.raise_for_status()
     return resp.json()
 
+
 def get_date(date_str: str) -> date:
     return datetime.strptime(date_str, '%Y-%m-%d').date()
 
@@ -48,8 +50,10 @@ def calculate_seven_day_avg_volume(data: TimeSeriesJson) -> float:
 
 
 # Find the average volume of MSFT in the past 7 days
-# ms_data = get_time_series_data_for(MICROSOFT)
-# ms_seven_day_avg_volume = calculate_seven_day_avg_volume(ms_data)
+ms_data = get_time_series_data_for(MICROSOFT)
+ms_seven_day_avg_volume = calculate_seven_day_avg_volume(ms_data)
+print(ms_seven_day_avg_volume)
+
 
 def get_highest_closing_six_months(data: TimeSeriesJson) -> float:
     apple_by_day = data['Time Series (Daily)']
@@ -68,8 +72,10 @@ def get_highest_closing_six_months(data: TimeSeriesJson) -> float:
 
 
 # Find the highest closing price of AAPL in the past 6 months
-# apple_data = get_time_series_data_for(APPLE)
-# apple_six_month_high = get_highest_closing_six_months(apple_data)
+apple_data = get_time_series_data_for(APPLE)
+apple_six_month_high = get_highest_closing_six_months(apple_data)
+print(apple_six_month_high)
+
 
 def get_thirty_day_diffs(data: TimeSeriesJson) -> List[float]:
     by_day = data['Time Series (Daily)']
@@ -86,8 +92,9 @@ def get_thirty_day_diffs(data: TimeSeriesJson) -> List[float]:
 
 
 # Find the difference between open and close price for BA for every day in the last month
-# boeing_data = get_time_series_data_for(BOEING)
-# boeing_30_days_diffs: List = get_thirty_day_diffs(boeing_data)
+boeing_data = get_time_series_data_for(BOEING)
+boeing_30_days_diffs: List = get_thirty_day_diffs(boeing_data)
+print(boeing_30_days_diffs)
 
 
 def highest_return_past_x_days(symbol: StockSymbol,
@@ -114,6 +121,7 @@ def highest_return_past_x_days(symbol: StockSymbol,
 
     return diff / price_thirty_days_ago
 
+
 def find_stock_with_highest_return(symbols: List[StockSymbol]) -> StockSymbol:
     stock_returns = {
         highest_return_past_x_days(symbol, 30): symbol
@@ -125,8 +133,7 @@ def find_stock_with_highest_return(symbols: List[StockSymbol]) -> StockSymbol:
 # Given a list of stock symbols, find the symbol with the largest return over the past month
 stock_symbols = [BOEING, APPLE, MICROSOFT]
 stock_highest_return = find_stock_with_highest_return(stock_symbols)
-
-print()
+print(stock_highest_return)
 
 
 
